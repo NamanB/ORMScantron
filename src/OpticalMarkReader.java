@@ -1,3 +1,5 @@
+import javax.swing.JFrame;
+
 import processing.core.PImage;
 
 /***
@@ -5,18 +7,17 @@ import processing.core.PImage;
  * 
  */
 public class OpticalMarkReader {
+	
 
 	/***
 	 * Method to do optical mark reading on page image.  Return an AnswerSheet object representing the page answers.
 	 * @param image
 	 * @return
 	 */
-	public AnswerSheet processPageImage(PImage image) {
+	public AnswerSheet processPageImage(PImage image, AnswerSheetFormat format) {
 		image.filter(PImage.GRAY);
-		for (int r = 0; r < image.height; r++)
-			for (int c = 0; c < image.width; c++) 
-				System.out.println(getPixelAt(r, c, image));
-						
+		
+		
 		return null;
 	}
 	

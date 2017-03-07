@@ -1,6 +1,6 @@
 import processing.core.PImage;
 
-public class Answer{
+public class Answer {
 	private int topX;
 	private int topY;
 	private int height;

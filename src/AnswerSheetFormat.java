@@ -1,9 +1,15 @@
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+
+import javax.swing.JFrame;
+import javax.swing.WindowConstants;
+
+import processing.core.PImage;
 
 public class AnswerSheetFormat implements Serializable {
 	private int problemHeight;
@@ -19,6 +25,26 @@ public class AnswerSheetFormat implements Serializable {
 		this.problemXStarts = problemXStarts;
 		this.problemYStart = problemYStart;
 		this.numBubbles = numBubbles;
+	}
+	
+	public static AnswerSheetFormat calculateFormat(PImage image) {
+		VisualTester tester = new VisualTester();
+		JFrame frame = new JFrame("PDF Calibration");
+		frame.add(tester);
+		frame.pack();
+		frame.setVisible(true);
+		tester.init();
+		tester.start();
+		
+		//create a boolean for the checkbox values
+		System.out.println(tester.isActive());
+		while(!tester.isActive());
+		
+		tester.stop();
+		tester.destroy();
+		System.out.println("destroyed");
+
+		return null;
 	}
 	
 	public static AnswerSheetFormat loadFormatFromFile(String fileName) {
@@ -62,6 +88,21 @@ public class AnswerSheetFormat implements Serializable {
 		return true;
 	}
 
+	public static String getCreatedFormatNames() {
+		StringBuilder formatNames = new StringBuilder();
+		File folder = new File("sheetFormats/");
+		File[] listOfFiles = folder.listFiles();
+
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile()) {
+				String fileName = listOfFiles[i].getName();
+				if (fileName.substring(fileName.length() - 4).equals(".ser")) 
+					formatNames.append(fileName.substring(0, fileName.length() - 4) + "\n");
+			}
+		}
+		return formatNames.toString();
+	}
+	
 	public int getProblemHeight() {
 		return problemHeight;
 	}

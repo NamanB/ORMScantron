@@ -109,8 +109,10 @@ public class Problem {
 		StringBuilder answers = new StringBuilder();
 		int size = answerIndexes.length();
 		
-		for (int i = 0; i < size; i++)
-			answers.append(bubbleLetters.substring(answerIndexes.substring(i, i+1)));
+		for (int i = 0; i < size; i++) {
+			int index = Integer.parseInt(answerIndexes.substring(i, i+1));
+			answers.append(bubbleLetters.substring(index, index+1));
+		}
 		
 		return answers.toString();
 	}

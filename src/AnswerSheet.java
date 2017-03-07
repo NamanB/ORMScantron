@@ -13,14 +13,16 @@ public class AnswerSheet {
 		this.bubbleLetters = bubbleLetters;
 		this.problems = problems;
 		this.image = image;
+		
+		matchLetter();
 	}
 	
-	public String matchLetter() {
-		for (Problem problem : this.problems)
-			problem.getBubbledAnswerIndexes();
-		
-		return null;
-		
+	public void matchLetter() {
+		StringBuilder ans = new StringBuilder();
+		for (int i = 0; i < problems.length; i++)
+			ans.append(i + ". " + problems[i].bubbleAnswers(this.bubbleLetters) + "\n");
+			
+		this.answers = ans.toString();
 	}
 	
 }
