@@ -21,10 +21,19 @@ public class Main {
 		//add a choose format or create new format option here
 		System.out.print("Type one of the scantron formats listed above or type \"new\" to create a new format > ");
 		String response = scanner.nextLine();
-		if (response.equals("new"))
+		if (response.equals("new")) {
 			format = AnswerSheetFormat.calculateFormat(images.get(0));
-		else
+			System.out.print("Would you like to save?(yes or no) > ");
+			response = scanner.nextLine();
+			if (response.equals("yes")) {
+				System.out.print("Name the file > ");
+				response = scanner.nextLine();
+				format.saveFormatToFile(response);
+			}
+		} else
 			format = AnswerSheetFormat.loadFormatFromFile(response);
+		scanner.close();
+		System.out.println(response + " format loaded\n");
 
 		System.out.println("Scoring all pages...");
 		scoreAllPages(images, format);
