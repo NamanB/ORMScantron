@@ -22,14 +22,10 @@ public class Main {
 		System.out.print("Type one of the scantron formats listed above or type \"new\" to create a new format > ");
 		String response = scanner.nextLine();
 		if (response.equals("new")) {
-			format = AnswerSheetFormat.calculateFormat(images.get(0));
-			System.out.print("Would you like to save?(yes or no) > ");
+			System.out.print("Name the file > ");
 			response = scanner.nextLine();
-			if (response.equals("yes")) {
-				System.out.print("Name the file > ");
-				response = scanner.nextLine();
-				format.saveFormatToFile(response);
-			}
+			format = AnswerSheetFormat.calculateFormat(images.get(0));
+			format.saveFormatToFile(response);
 		} else
 			format = AnswerSheetFormat.loadFormatFromFile(response);
 		scanner.close();

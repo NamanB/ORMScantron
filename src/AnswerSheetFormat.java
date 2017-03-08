@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import javax.swing.JFrame;
@@ -20,6 +21,23 @@ public class AnswerSheetFormat implements Serializable {
 	private int[] problemXStarts;
 	private int[] problemYStarts;
 	private String keyLetters;
+	
+	public static void main(String[] args) {
+		System.out.print("Please type the path of the pdf file > ");
+		Scanner scanner = new Scanner(System.in);
+		String path = scanner.nextLine();								//sampe path = Main.PDF_PATH
+		System.out.print("Please type the name of the format > ");
+		String name = scanner.nextLine();
+		createAndSaveNewAnswerSheetFormat(path, name);
+	}
+	
+	public static void createAndSaveNewAnswerSheetFormat(String pdfPath, String name) {
+		System.out.println("Time to create a new format!");
+		System.out.println("Loading file..." + pdfPath);
+		ArrayList<PImage> images = PDFHelper.getPImagesFromPdf(pdfPath);
+		AnswerSheetFormat format = calculateFormat(images.get(0));
+		format.saveFormatToFile(name);
+	}
 	
 	public AnswerSheetFormat(int problemHeight, int problemWidth, int[] problemXStarts, int problemYStarts[],
 			String keyLetters) {
@@ -73,11 +91,11 @@ public class AnswerSheetFormat implements Serializable {
 		tester.setProblemCols(problemCols);
 		JFrame frame = new JFrame("PDF Calibration");
 		frame.setSize(tester.w, tester.h);
-//		frame.add(tester);
-		JPanel container = new JPanel();	//new stuff
-		container.add(tester);
-		JScrollPane jsp = new JScrollPane(container);
-		frame.add(jsp);
+		frame.add(tester);
+//		JPanel container = new JPanel();	//new stuff
+//		container.add(tester);
+//		JScrollPane jsp = new JScrollPane(container);
+//		frame.add(jsp);
 		
 		frame.pack();
 		frame.setVisible(true);
@@ -94,16 +112,14 @@ public class AnswerSheetFormat implements Serializable {
 		
 		while (tester.getProcedureAdvancements() < problemCols.length) {
 			
-			System.out.println("try to slow down buddy!");
+			System.out.println("look at window, buffering...");		//need to find a different way to slow the speed down to get info
 			if (tester.getProcedureAdvancements() != advancements) {
 				advancements = tester.getProcedureAdvancements();
-				System.out.println(advancements + " hi --> " + problemCols.length);
 			}
 
 			if (previousAdvance+2 == advancements) {
 				previousAdvance = advancements-1;
 				problemInfo = transferData(advancements-1, tester.getInfo(), problemInfo);
-				System.out.println(problemCols.length + " " + advancements);
 			}
 		}
 		System.out.println("done");
