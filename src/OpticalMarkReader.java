@@ -16,9 +16,24 @@ public class OpticalMarkReader {
 	 */
 	public AnswerSheet processPageImage(PImage image, AnswerSheetFormat format) {
 		image.filter(PImage.GRAY);
+		int index = 0;
+		int[] numProblems = format.getProblemCols();
+		int[] xStarts = format.getProblemXStarts();
+		int[] yStarts = format.getProblemYStart();
+		Problem[] problems = new Problem[format.getNumProblems()];
 		
+		for (int col = 0; col < numProblems.length; col++) {								//loop over each column
+			for (int problemNum = 0; problemNum < numProblems[col]; problemNum++) {
+				if (index < 98) {//coment out later
+				System.out.println(numProblems[col] + " vs. " + xStarts.length + ", " + yStarts.length);
+				System.out.println(index + " vs. " + problems.length + "\n");
+				problems[index++] = new Problem(xStarts[col], yStarts[col], format.getProblemWidth(),
+						format.getProblemHeight(), format.getNumBubbles(), image);
+				}
+			}
+		}
 		
-		return null;
+		return new AnswerSheet(format.getKeyLetters(), problems, image);
 	}
 	
 	public int[][] getRectangleAt(int startRow, int startCol, int width, int height, PImage image) {
@@ -41,7 +56,7 @@ public class OpticalMarkReader {
 	public static int getPixelAt(int row, int col, PImage image) {
 		image.loadPixels();
 		int color = image.pixels[row*image.width+col] & 255;
-		System.out.println(color);
+//		System.out.println(color);
 		return color;
 	}
 	

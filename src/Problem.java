@@ -18,25 +18,31 @@ public class Problem {
 		this.width = width;
 		this.height = height;
 		this.numBubbles = numBubbles;
-		this.answers = new Answer[numBubbles+1];
+		this.answers = new Answer[numBubbles];
 		this.image = image;
 		
 		calculateThreshold();
 		createAnswers();
+		int a = 0;
 	}
 	
 	private void createAnswers() {
-		int answerWidth = image.width/numBubbles, index = 0;
+		int answerWidth = this.width/numBubbles, index = 0;
 		
-		for (int c = this.topX; c < this.topX+width; c += answerWidth) 
+//		for (int c = this.topX; c <= this.topX+(width*numBubbles); c += answerWidth) 
+//			this.answers[index++] = new Answer(this, c, this.topY, this.height, answerWidth, image);
+		for (int c = this.topX; c <= this.width; c += answerWidth) 
 			this.answers[index++] = new Answer(this, c, this.topY, this.height, answerWidth, image);
 	}
-
+	
 	private void calculateThreshold() {
-		for (Answer answer : this.answers)
-			this.threshold += answer.calculateAverage();
-		
-		this.threshold /= answers.length;
+		for (int row = this.topY; row < this.topY + this.height; row++) {
+			for (int col = this.topX; col < this.topX + this.width; col++) {
+				this.threshold += OpticalMarkReader.getPixelAt(row, col, this.image);
+			}
+		}
+//			this.threshold += answer.calculateAverage();
+		this.threshold /= numBubbles;
 		this.threshold -= this.OFFSET;
 	}
 

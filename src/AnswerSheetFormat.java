@@ -20,6 +20,7 @@ public class AnswerSheetFormat implements Serializable {
 	private int problemWidth;
 	private int[] problemXStarts;
 	private int[] problemYStarts;
+	private int[] problemCols;		//number of problems in each column
 	private String keyLetters;
 	
 	public static void main(String[] args) {
@@ -39,16 +40,17 @@ public class AnswerSheetFormat implements Serializable {
 		format.saveFormatToFile(name);
 	}
 	
-	public AnswerSheetFormat(int problemHeight, int problemWidth, int[] problemXStarts, int problemYStarts[],
+	public AnswerSheetFormat(int[] problemCols, int problemHeight, int problemWidth, int[] problemXStarts, int problemYStarts[],
 			String keyLetters) {
 		this.problemHeight = problemHeight;
 		this.problemWidth = problemWidth;
 		this.problemXStarts = problemXStarts;
 		this.problemYStarts = problemYStarts;
+		this.problemCols = problemCols;
 		this.keyLetters = keyLetters;
 	}
 	
-	private AnswerSheetFormat(int[][] information, int problemHeight, int problemWidth, String keyLetters) {
+	private AnswerSheetFormat(int[] problemCols, int[][] information, int problemHeight, int problemWidth, String keyLetters) {
 		problemXStarts = new int[information.length];
 		problemYStarts = new int[information.length];
 		
@@ -59,6 +61,7 @@ public class AnswerSheetFormat implements Serializable {
 		this.problemHeight = problemHeight;
 		this.problemWidth = problemWidth;
 		this.keyLetters = keyLetters;
+		this.problemCols = problemCols;
 	}
 	
 	public static AnswerSheetFormat calculateFormat(PImage image) {
@@ -103,8 +106,6 @@ public class AnswerSheetFormat implements Serializable {
 		tester.start();
 		tester.setSameLine(sameLine);
 		
-		
-		
 		int[][] problemInfo = new int[problemCols.length][2];
 		//create a boolean for the checkbox values
 		int advancements = 0, previousAdvance = advancements-1;
@@ -122,6 +123,7 @@ public class AnswerSheetFormat implements Serializable {
 				problemInfo = transferData(advancements-1, tester.getInfo(), problemInfo);
 			}
 		}
+		for (int i = 0; i < Integer.MAX_VALUE; i++) {}	//delay for tester to display closing message
 		System.out.println("done");
 		problemHeight = tester.getProblemHeight();
 		problemWidth = tester.getProblemWidth();
@@ -129,8 +131,7 @@ public class AnswerSheetFormat implements Serializable {
 		tester.stop();
 		tester.destroy();
 		
-		
-		return new AnswerSheetFormat(problemInfo, problemHeight, problemWidth, letters);
+		return new AnswerSheetFormat(problemCols, problemInfo, problemHeight, problemWidth, letters);
 	}
 	
 	public static AnswerSheetFormat loadFormatFromFile(String fileName) {
@@ -241,5 +242,18 @@ public class AnswerSheetFormat implements Serializable {
 	public int getNumBubbles() {
 		return keyLetters.length();
 	}
+
+	public int[] getProblemCols() {
+		return problemCols;
+	}
 	
+	public int getNumProblems() {
+		int sum = 0;
+		
+		for (int i = 0; i < problemCols.length; i++)
+			sum += problemCols[i];
+		
+		return sum;
+	}
+
 }

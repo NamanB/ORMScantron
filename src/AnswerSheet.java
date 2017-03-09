@@ -24,5 +24,9 @@ public class AnswerSheet {
 			
 		this.answers = ans.toString();
 	}
+
+	public String getAnswers() {
+		return answers;
+	}
 	
 }

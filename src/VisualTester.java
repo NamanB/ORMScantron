@@ -68,8 +68,6 @@ public class VisualTester extends PApplet implements KeyListener {
 				this.startY = mouseY - this.problemHeight;
 				information[0] = mouseX;						//topX
 				information[1] = mouseY;						//topY
-//				information[2] = this.width;					//height
-//				information[3] = this.height;					//width
 			}
 			procedureAdvances++;
 		}
