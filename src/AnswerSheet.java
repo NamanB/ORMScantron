@@ -20,7 +20,7 @@ public class AnswerSheet {
 	public void matchLetter() {
 		StringBuilder ans = new StringBuilder();
 		for (int i = 0; i < problems.length; i++)
-			ans.append(i + ". " + problems[i].bubbleAnswers(this.bubbleLetters) + "\n");
+			ans.append(problems[i].bubbleAnswers(this.bubbleLetters));
 			
 		this.answers = ans.toString();
 	}

@@ -35,17 +35,14 @@ public class Main {
 		System.out.println("\n" + response + " format loaded\n");
 
 		System.out.println("Scoring all pages...");
-		CSVData data = scoreAllPages(images, format, filePath+name);
-		
-//		System.out.println("Saving Data...");
-//		saveResults(name, filePath, data);
+		scoreAllPages(images, format, filePath+name);
 
 		System.out.println("Complete!");
 		
-		// Optional:  add a saveResults() method to save answers to a csv file
 	}
 
 	private static void saveResults(String name, String filePath, CSVData data) {
+		System.out.println("Saving Data...");
 		data.saveCurrentState(filePath + name);
 	}
 
@@ -56,23 +53,51 @@ public class Main {
 	 * 
 	 * @param images List of images corresponding to each page of original pdf
 	 */
-	private static CSVData scoreAllPages(ArrayList<PImage> images, AnswerSheetFormat format, String filePath) {
+	private static void scoreAllPages(ArrayList<PImage> images, AnswerSheetFormat format, String filePath) {
 		ArrayList<AnswerSheet> scoredSheets = new ArrayList<AnswerSheet>();
-//		CSVData data = new CSVData(filePath, 1, new String[]{"# correct", "# incorrect", " % correct", "% incorrect"});
+		CSVData data = new CSVData(filePath, 0, new String[]{"# correct", "# incorrect", " % correct", "% incorrect"});
+		CSVData analytics = new CSVData(filePath + "Analytics", 0, new String[] {"Problem", "Number incorrect", "Percent Correct"});
+		double[][] answerData = new double[4][images.size()];
 
 		// Score the first page as the key		
 		AnswerSheet key = markReader.processPageImage(images.get(0), format);
+		String answerKey = key.getAnswers();
+		
+		double[][] analyticsData = new double[answerKey.length()][3];
+		
+		for (int i = 0; i < analyticsData.length; i++)
+			analyticsData[i][0] = i+1;
 
 		System.out.println("got to here");
 		for (int i = 1; i < images.size(); i++) {
 			PImage image = images.get(i);
 
+			double correct = 0, incorrect = 0, perCorrect = 0, perIncorrect = 0;
 			AnswerSheet answers = markReader.processPageImage(image, format);
-//			System.out.println(answers.getAnswers());
+			String studentAnswers = answers.getAnswers();
 
 			// do something with answers
-//			answers.getAnswer
+			for (int j = 0; j < answerKey.length(); j++) {
+				if (studentAnswers.substring(j, j+1).equals(answerKey.substring(j, j+1)))
+					correct++;
+				else {
+					incorrect++;
+					analyticsData[1][i]++;
+				}
+			}
+			answerData[i][0] = correct;
+			answerData[i][1] = incorrect;
+			answerData[i][2] = (correct / answerKey.length()) * 100;
+			answerData[i][3] = 100 - answerData[i][2];
 		}
-		return null;
+		
+		for (int i = 0; i < analyticsData.length; i++) {
+			analyticsData[i][2] = analyticsData[i][3] / images.size();
+		}
+		
+		data.setData(answerData);
+		data.saveCurrentState(data.getFilePath());
+		analytics.setData(analyticsData);
+		analytics.saveCurrentState(analytics.getFilePath());
 	}
 }
